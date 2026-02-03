@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="card p-5 shadow-lg border-0" style="max-width: 600px; width: 100%;">
+        <h3 class="fw-bold mb-4">Add New Subject</h3>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-muted">Subject Name</label>
+                {{ form.name }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-muted d-block">Assign Classes</label>
+                <div class="row g-2">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap gap-3">
+                            {% for checkbox in form.classes %}
+                            <div class="form-check">
+                                {{ checkbox.tag }}
+                                <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                    {{ checkbox.choice_label }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <small class="text-muted mt-2 d-block">Select all classes where this subject is taught.</small>
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary py-3 rounded-pill fw-semibold shadow-sm animate-hover">
+                    Create Subject
+                </button>
+                <a href="{% url 'teacher_dashboard' %}" class="btn btn-light py-3 rounded-pill">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

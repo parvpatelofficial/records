@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-gradient-light">
+    <div class="card p-5 shadow-lg" style="max-width: 500px; width: 100%;">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">Create Principal Account</h2>
+            <p class="text-muted">Register your school to get started</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label fw-medium">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div class="text-danger small mt-1">
+                    {{ field.errors.0 }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <button type="submit"
+                class="btn btn-primary w-100 py-3 rounded-pill fw-semibold shadow-sm animate-hover mt-3">
+                Register & Verify
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <p class="small text-muted">Already have an account? <a href="{% url 'login_principal' %}"
+                    class="fw-semibold">Login here</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

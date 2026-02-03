@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- List Classes -->
+        <div class="col-md-8">
+            <h2 class="fw-bold mb-4">Class Management</h2>
+            {% if classes %}
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Class</th>
+                                <th>Division</th>
+                                <th>Stream</th>
+                                <th>Students</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cls in classes %}
+                            <tr>
+                                <td class="ps-4 fw-bold">Class {{ cls.class_number }}</td>
+                                <td>{{ cls.division }}</td>
+                                <td>
+                                    {% if cls.stream != 'NONE' %}
+                                    <span class="badge bg-info text-dark">{{ cls.get_stream_display }}</span>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ cls.students.count }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-light text-center shadow-sm">No classes found. Add one to get started.</div>
+            {% endif %}
+        </div>
+
+        <!-- Add Class Form -->
+        <div class="col-md-4">
+            <div class="card p-4 border-0 shadow-sm sticky-top" style="top: 2rem;">
+                <h4 class="fw-bold mb-3">Add New Class</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div class="text-danger small mt-1">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit"
+                        class="btn btn-primary w-100 rounded-pill fs-6 fw-semibold animate-hover">Create Class</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'principal_dashboard' %}" class="text-decoration-none text-muted">← Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

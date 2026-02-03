@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card p-4 shadow-sm border-0">
+                <h4 class="fw-bold mb-4">Select Subject</h4>
+                <div class="list-group list-group-flush">
+                    {% for subject in subjects %}
+                    <a href="?subject_id={{ subject.id }}"
+                        class="list-group-item list-group-item-action border-0 rounded mb-2 {% if selected_subject.id == subject.id %}active{% endif %}">
+                        {{ subject.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            {% if selected_subject %}
+            <div class="card p-5 shadow-lg border-0">
+                <h3 class="fw-bold mb-4">Assign Classes to: <span class="text-primary">{{ selected_subject.name
+                        }}</span></h3>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted d-block mb-3">Available Classes</label>
+                        <div class="row g-3">
+                            {% for checkbox in form.classes %}
+                            <div class="col-md-4">
+                                <div class="form-check p-3 border rounded animate-hover">
+                                    {{ checkbox.tag }}
+                                    <label class="form-check-label ms-2 fw-semibold" for="{{ checkbox.id_for_label }}">
+                                        {{ checkbox.choice_label }}
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit"
+                            class="btn btn-primary py-3 rounded-pill fw-semibold shadow-sm animate-hover">
+                            Save Assignments
+                        </button>
+                        <a href="{% url 'teacher_dashboard' %}" class="btn btn-light py-3 rounded-pill">Back to
+                            Dashboard</a>
+                    </div>
+                </form>
+            </div>
+            {% else %}
+            <div class="card p-5 shadow-sm border-0 text-center">
+                <h4 class="text-muted">Please select a subject from the left to assign classes.</h4>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-check-input:checked+.form-check-label {
+        color: var(--bs-primary);
+    }
+
+    .form-check:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    .list-group-item.active {
+        background-color: var(--bs-primary) !important;
+        border-color: var(--bs-primary) !important;
+    }
+</style>
+{% endblock %}

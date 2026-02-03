@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Student Records</h2>
+        <a href="{% url 'add_student' %}" class="btn btn-primary rounded-pill px-4 shadow-sm animate-hover">
+            + New Student
+        </a>
+    </div>
+
+    <!-- Search/Filter could go here -->
+
+    {% if students %}
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Roll No</th>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Parent Phone</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        {% ifchanged student.class_division %}
+                        {% if not forloop.first %}
+                        <!-- Spacer Row for separation -->
+                        <tr style="height: 30px;">
+                            <td colspan="5" class="border-0"></td>
+                        </tr>
+                        {% endif %}
+
+                        <!-- Class Header Row -->
+                        <tr class="table-info border-top border-bottom border-secondary">
+                            <td colspan="5" class="fw-bold ps-4 py-3 text-uppercase text-primary">
+                                <i class="bi bi-people-fill me-2"></i> Class: {{ student.class_division }}
+                            </td>
+                        </tr>
+                        {% endifchanged %}
+                        <tr>
+                            <td class="ps-4 fw-mono text-muted">{{ student.roll_no }}</td>
+                            <td class="fw-medium">
+                                {% if student.photo %}
+                                <img src="{{ student.photo.url }}" class="rounded-circle me-2" width="32" height="32"
+                                    style="object-fit: cover;">
+                                {% else %}
+                                <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center me-2 text-muted fw-bold"
+                                    style="width: 32px; height: 32px; font-size: 12px;">{{ student.name|slice:":1" }}
+                                </div>
+                                {% endif %}
+                                {{ student.name }}
+                            </td>
+                            <td>{{ student.class_division }}</td>
+                            <td>{{ student.parent_phone }}</td>
+                            <td class="text-end pe-4">
+                                <a href="{% url 'edit_student' student.id %}" class="btn btn-sm btn-link text-decoration-none">Edit</a>
+                                {% if user.role == 'PRINCIPAL' %}
+                                <a href="{% url 'delete_student' student.id %}"
+                                    class="btn btn-sm btn-link text-danger text-decoration-none"
+                                    onclick="return confirm('Delete student?');">Delete</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <p class="text-muted lead">No students found.</p>
+        <a href="{% url 'add_student' %}" class="btn btn-outline-primary rounded-pill">Add Student</a>
+    </div>
+    {% endif %}
+
+    <div class="mt-4">
+        {% if user.role == 'PRINCIPAL' %}
+        <a href="{% url 'principal_dashboard' %}" class="text-decoration-none text-muted">← Back to Dashboard</a>
+        {% else %}
+        <a href="{% url 'teacher_dashboard' %}" class="text-decoration-none text-muted">← Back to Dashboard</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

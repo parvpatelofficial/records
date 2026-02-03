@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="card p-5 shadow-lg border-0" style="max-width: 500px; width: 100%;">
+        <h3 class="fw-bold mb-4">Take Attendance</h3>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-muted">Select Class</label>
+                {{ form.class_division }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-muted">Date</label>
+                {{ form.date }}
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary py-3 rounded-pill fw-semibold shadow-sm animate-hover">
+                    Proceed to List
+                </button>
+                <a href="{% url 'teacher_dashboard' %}" class="btn btn-light py-3 rounded-pill">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

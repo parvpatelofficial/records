@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-gradient-light">
+    <div class="card p-5 shadow-lg text-center" style="max-width: 450px; width: 100%;">
+        <div class="mb-4">
+            <h2 class="fw-bold">2-Step Verification</h2>
+            <p class="text-muted">Enter your phone number to receive a verification code.</p>
+        </div>
+
+        <!-- Firebase Phone Auth Container -->
+        <div id="phone-auth-container">
+            <div class="mb-3 text-start">
+                <label class="form-label small fw-bold text-muted">Phone Number</label>
+                <input type="tel" id="phoneNumber" class="form-control" placeholder="+1 123 456 7890">
+            </div>
+            <div id="recaptcha-container" class="mb-3 d-flex justify-content-center"></div>
+
+            <button id="send-otp-btn"
+                class="btn btn-primary w-100 py-3 rounded-pill fw-semibold shadow-sm animate-hover" onclick="sendOTP()">
+                Send Verification Code
+            </button>
+        </div>
+
+        <!-- Verify OTP Container (Hidden initially) -->
+        <div id="verify-otp-container" style="display: none;">
+            <div class="mb-3 text-start">
+                <label class="form-label small fw-bold text-muted">Enter 6-digit Code</label>
+                <input type="text" id="verificationCode" class="form-control text-center" placeholder="123456"
+                    maxlength="6">
+            </div>
+
+            <button id="verify-btn" class="btn btn-success w-100 py-3 rounded-pill fw-semibold shadow-sm animate-hover"
+                onclick="verifyOTP()">
+                Verify & Login
+            </button>
+        </div>
+
+        <!-- Classic Fallback (Hidden by default unless Firebase fails/dev mode) -->
+        <div id="classic-flow" class="mt-4 border-top pt-4" style="display: none;">
+            <p class="text-muted small">Legacy/Dev: Enter Server Console OTP</p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.otp }}
+                <button type="submit" class="btn btn-secondary w-100 mt-2 btn-sm">Submit Legacy OTP</button>
+            </form>
+        </div>
+
+        <div class="text-center mt-4">
+            <small class="text-muted"><a href="#" onclick="toggleLegacy()" class="text-muted">Switch to Legacy/Dev
+                    Mode</a></small>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase Config & Scripts -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    // TODO: PASTE YOUR FIREBASE CONFIG HERE
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY_HERE",
+        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "SENDER_ID",
+        appId: "APP_ID"
+    };
+
+    // Initialize Firebase
+    let app, auth;
+    try {
+        app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        window.auth = auth; // Expose for functions
+    } catch (e) {
+        console.error("Firebase Init Error:", e);
+        alert("Firebase Config Missing! Please update templates/accounts/verify_otp.html");
+    }
+
+    // Set Language
+    auth.languageCode = 'en';
+
+    window.setupRecaptcha = function () {
+        if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                'size': 'normal',
+                'callback': (response) => {
+                    // reCAPTCHA solved
+                }
+            });
+        }
+    }
+
+    window.sendOTP = function () {
+        const phoneNumber = document.getElementById('phoneNumber').value;
+        if (!phoneNumber) { alert("Please enter phone number"); return; }
+
+        setupRecaptcha();
+        const appVerifier = window.recaptchaVerifier;
+
+        signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+            .then((confirmationResult) => {
+                window.confirmationResult = confirmationResult;
+                document.getElementById('phone-auth-container').style.display = 'none';
+                document.getElementById('verify-otp-container').style.display = 'block';
+                alert("OTP Sent!");
+            }).catch((error) => {
+                console.error(error);
+                alert("SMS Error: " + error.message);
+            });
+    }
+
+    window.verifyOTP = function () {
+        const code = document.getElementById('verificationCode').value;
+        if (!code) return;
+
+        window.confirmationResult.confirm(code).then((result) => {
+            const user = result.user;
+            // User is signed in. Now get ID token and send to backend
+            user.getIdToken().then((idToken) => {
+                // Submit to Django
+                submitTokenToBackend(idToken);
+            });
+        }).catch((error) => {
+            alert("Invalid OTP");
+        });
+    }
+
+    function submitTokenToBackend(token) {
+        // Create a hidden form and submit
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = window.location.href;
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        const tokenInput = document.createElement('input');
+        tokenInput.type = 'hidden';
+        tokenInput.name = 'firebase_token';
+        tokenInput.value = token;
+
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = csrfToken;
+
+        form.appendChild(tokenInput);
+        form.appendChild(csrfInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    window.toggleLegacy = function () {
+        const legacy = document.getElementById('classic-flow');
+        legacy.style.display = legacy.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

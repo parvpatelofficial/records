@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="card p-5 shadow-lg border-0" style="max-width: 600px; width: 100%;">
+        <h3 class="fw-bold mb-4">Enrol New Student</h3>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Full Name</label>
+                        {{ form.name }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Roll Number</label>
+                        {{ form.roll_no }}
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Class & Section</label>
+                        {{ form.class_division }}
+                        <small class="text-muted">Scroll to see more classes</small>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Address</label>
+                        {{ form.address }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Parent Phone</label>
+                        {{ form.parent_phone }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Photo</label>
+                        {{ form.photo }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary py-3 rounded-pill fw-semibold shadow-sm animate-hover">
+                    Save Student Record
+                </button>
+                <a href="{% url 'manage_students' %}" class="btn btn-light py-3 rounded-pill">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="card p-5 shadow-lg border-0" style="max-width: 600px; width: 100%;">
+        <div class="text-center mb-4">
+            <h3 class="fw-bold">Exams & Marks Entry</h3>
+            <p class="text-muted">Select criteria to enter marks</p>
+        </div>
+
+        <form method="get" action="">
+            <div class="mb-4">
+                <label class="form-label small fw-bold text-muted">Select Exam</label>
+                <div class="d-grid gap-2 d-md-block">
+                    {% for code, name in exam_types %}
+                    <input type="radio" class="btn-check" name="exam_name" id="exam_{{code}}" value="{{code}}" required>
+                    <label class="btn btn-outline-primary rounded-pill mb-2" for="exam_{{code}}">{{name}}</label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Class</label>
+                        <select name="class_id" class="form-select" required>
+                            <option value="">Choose Class</option>
+                            {% for cls in classes %}
+                            <option value="{{ cls.id }}">{{ cls }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Subject</label>
+                        <select name="subject_id" class="form-select" required>
+                            <option value="">Choose Subject</option>
+                            {% for sub in subjects %}
+                            <option value="{{ sub.id }}">{{ sub.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary py-3 rounded-pill fw-semibold shadow-sm animate-hover">
+                    Proceed to Marks Entry
+                </button>
+                <a href="{% url 'teacher_dashboard' %}" class="btn btn-light py-3 rounded-pill">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

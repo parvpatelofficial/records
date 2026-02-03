@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="landing-page d-flex align-items-center justify-content-center min-vh-100" style="margin-top: -80px;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center animate-fade-in">
+                <div class="mb-4">
+                    <span class="badge rounded-pill bg-white text-primary px-3 py-2 shadow-sm mb-3 fw-semibold">Modern
+                        School Management</span>
+                </div>
+                <h1 class="display-2 fw-bold mb-4 gradient-text">Elevate Your School's Potential</h1>
+                <p class="lead mb-5 text-muted px-lg-5">A comprehensive, secure, and intuitive platform designed to
+                    streamline administrative tasks and empower educators.</p>
+
+                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mb-5">
+                    <a href="{% url 'login_principal' %}" class="btn btn-primary btn-lg px-5 py-3 btn-pill shadow-lg">
+                        Principal Portal
+                    </a>
+                    <a href="{% url 'login_teacher' %}"
+                        class="btn btn-outline-primary btn-lg px-5 py-3 btn-pill glass-card bg-transparent">
+                        Teacher Portal
+                    </a>
+                </div>
+
+                <div class="mt-5">
+                    <p class="text-muted small mb-2">New administrator?</p>
+                    <a href="{% url 'register_principal' %}" class="text-primary text-decoration-none fw-bold">
+                        Create Principal Account <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-5 align-items-center animate-fade-in">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2">
+                    <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Teacher Dashboard</li>
+                </ol>
+            </nav>
+            <h1 class="display-5 fw-bold mb-0">Teacher <span class="gradient-text">Workstation</span></h1>
+            <p class="text-muted mt-2">Manage your academic records, attendance, and student performance.</p>
+        </div>
+    </div>
+
+    <div class="row g-4 animate-fade-in" style="animation-delay: 0.1s;">
+        <!-- Daily Operations -->
+        <div class="col-12 mb-2">
+            <h5 class="fw-bold text-uppercase small letter-spacing-lg mb-3">Core Operations</h5>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass-card h-100 p-4">
+                <div class="mb-4">
+                    <div class="stats-icon bg-success bg-opacity-10 text-success mb-3">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">Attendance</h4>
+                    <p class="text-muted small">Record daily attendance for your assigned classes.</p>
+                </div>
+                <a href="{% url 'take_attendance' %}" class="btn btn-primary btn-pill mt-auto w-100">Launch Attendance
+                    Tracker</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass-card h-100 p-4">
+                <div class="mb-4">
+                    <div class="stats-icon bg-warning bg-opacity-10 text-warning mb-3">
+                        <i class="bi bi-clipboard-data"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">Examination Marks</h4>
+                    <p class="text-muted small">Enter and modify student scores for various exams.</p>
+                </div>
+                <a href="{% url 'enter_marks' %}" class="btn btn-outline-primary btn-pill mt-auto w-100">Open
+                    Gradebook</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass-card h-100 p-4">
+                <div class="mb-4">
+                    <div class="stats-icon bg-info bg-opacity-10 text-info mb-3">
+                        <i class="bi bi-person-plus"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">New Enrollment</h4>
+                    <p class="text-muted small">Register new students into the school system.</p>
+                </div>
+                <a href="{% url 'add_student' %}" class="btn btn-outline-primary btn-pill mt-auto w-100">Add Student
+                    Record</a>
+            </div>
+        </div>
+
+        <!-- System Configuration (For Teachers with higher permissions or setup) -->
+        <div class="col-12 mt-4 mb-2">
+            <h5 class="fw-bold text-uppercase small letter-spacing-lg mb-3">Academic Setup</h5>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass-card h-100 p-4 border-0">
+                <div class="mb-3 d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="fw-bold mb-1">Subject Registry</h6>
+                        <p class="text-muted small mb-0">Add new academic subjects.</p>
+                    </div>
+                    <a href="{% url 'add_subject' %}" class="btn btn-light btn-sm rounded-circle"><i
+                            class="bi bi-plus"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass-card h-100 p-4 border-0">
+                <div class="mb-3 d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h6 class="fw-bold mb-1">Class Assignment</h6>
+                        <p class="text-muted small mb-0">Assign subjects to classes.</p>
+                    </div>
+                    <a href="{% url 'assign_classes' %}" class="btn btn-light btn-sm rounded-circle"><i
+                            class="bi bi-link-45deg"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-5 align-items-center animate-fade-in">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2">
+                    <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                </ol>
+            </nav>
+            <h1 class="display-5 fw-bold mb-0">Principal <span class="gradient-text">Dashboard</span></h1>
+            <p class="text-muted mt-2">Welcome back. Here's what's happening in your school today.</p>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-4 mb-5 animate-fade-in" style="animation-delay: 0.1s;">
+        <div class="col-md-3">
+            <div class="glass-card stats-card px-4 py-4">
+                <div class="stats-icon bg-primary bg-opacity-10 text-primary">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0">{{ teacher_count|default:"0" }}</h3>
+                    <p class="text-muted small mb-0">Total Teachers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card stats-card px-4 py-4">
+                <div class="stats-icon bg-success bg-opacity-10 text-success">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0">{{ student_count|default:"0" }}</h3>
+                    <p class="text-muted small mb-0">Total Students</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card stats-card px-4 py-4">
+                <div class="stats-icon bg-info bg-opacity-10 text-info">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0">{{ class_count|default:"0" }}</h3>
+                    <p class="text-muted small mb-0">Active Classes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card stats-card px-4 py-4">
+                <div class="stats-icon bg-warning bg-opacity-10 text-warning">
+                    <i class="bi bi-journal-text"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0">{{ subject_count|default:"0" }}</h3>
+                    <p class="text-muted small mb-0">Subjects</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 animate-fade-in" style="animation-delay: 0.2s;">
+        <div class="col-md-4">
+            <div class="glass-card h-100 p-4 d-flex flex-column">
+                <div class="mb-4">
+                    <h4 class="fw-bold mb-2">Faculty Management</h4>
+                    <p class="text-muted small">Manage teacher profiles, access credentials, and assignments.</p>
+                </div>
+                <a href="{% url 'manage_teachers' %}" class="btn btn-primary btn-pill mt-auto w-100">Manage Teachers</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass-card h-100 p-4 d-flex flex-column">
+                <div class="mb-4">
+                    <h4 class="fw-bold mb-2">Student Directory</h4>
+                    <p class="text-muted small">Enroll new students and manage existing records across all classes.</p>
+                </div>
+                <a href="{% url 'manage_students' %}" class="btn btn-outline-primary btn-pill mt-auto w-100">Student
+                    List</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass-card h-100 p-4 d-flex flex-column">
+                <div class="mb-4">
+                    <h4 class="fw-bold mb-2">Academic Structure</h4>
+                    <p class="text-muted small">Configure classes, divisions, and curriculum subjects.</p>
+                </div>
+                <a href="{% url 'manage_classes' %}" class="btn btn-outline-primary btn-pill mt-auto w-100">Setup
+                    Classes</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass-card h-100 p-4 d-flex flex-column">
+                <div class="mb-4">
+                    <h4 class="fw-bold mb-2">Institutional Insights</h4>
+                    <p class="text-muted small">Generate academic performance reports and analytics.</p>
+                </div>
+                <a href="{% url 'view_reports' %}" class="btn btn-outline-primary btn-pill mt-auto w-100">Academic
+                    Reports</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

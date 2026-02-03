@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load academics_extras %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4 align-items-center animate-fade-in">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2">
+                    <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'enter_marks' %}"
+                            class="text-decoration-none text-muted">Select Exam</a></li>
+                    <li class="breadcrumb-item active">Entry Grid</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0">Gradebook <span class="gradient-text">Entry</span></h2>
+            <p class="text-muted mt-1">{{ exam_display }} • {{ subject.name }} • {{ class }}</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a href="{% url 'enter_marks' %}" class="btn btn-outline-primary btn-pill btn-sm">Change Configuration</a>
+        </div>
+    </div>
+
+    <form method="post" class="animate-fade-in" style="animation-delay: 0.1s;">
+        {% csrf_token %}
+        <input type="hidden" name="save_marks" value="true">
+        <input type="hidden" name="class_id" value="{{ class.id }}">
+        <input type="hidden" name="subject_id" value="{{ subject.id }}">
+        <input type="hidden" name="exam_name" value="{{ exam_name }}">
+
+        <div class="glass-card overflow-hidden">
+            <div class="table-responsive" style="max-height: 600px;">
+                <table class="table custom-table table-hover mb-0 align-middle">
+                    <thead class="sticky-top bg-light shadow-sm" style="z-index: 10;">
+                        <tr>
+                            <th class="ps-4">Roll No</th>
+                            <th>Student Name</th>
+                            <th class="text-end pe-4" style="width: 250px;">Marks Obtained (0-100)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        {% with mark=marks_map|get_item:student.id %}
+                        <tr>
+                            <td class="ps-4">
+                                <span class="badge bg-light text-dark rounded-pill px-3">{{ student.roll_no }}</span>
+                            </td>
+                            <td>
+                                <div class="fw-semibold">{{ student.name }}</div>
+                            </td>
+                            <td class="pe-4">
+                                <div class="d-flex align-items-center justify-content-end">
+                                    {% if mark and user.role == "TEACHER" and mark.recorded_by.user != user %}
+                                    <div class="input-group input-group-sm" style="max-width: 150px;">
+                                        <input type="number" step="0.1" name="score_{{ student.id }}"
+                                            class="form-control text-end border-0 bg-light" disabled
+                                            value="{{ mark.score }}">
+                                        <span class="input-group-text bg-light border-0 text-muted small"><i
+                                                class="bi bi-lock-fill"></i></span>
+                                    </div>
+                                    <div class="ms-2" title="Entered by {{ mark.recorded_by.user.username }}">
+                                        <div class="rounded-circle bg-secondary" style="width: 8px; height: 8px;"></div>
+                                    </div>
+                                    {% else %}
+                                    <div class="input-group" style="max-width: 150px;">
+                                        <input type="number" step="0.1" min="0" max="100" name="score_{{ student.id }}"
+                                            class="form-control text-end border-primary-subtle" placeholder="0.0"
+                                            value="{{ mark.score|default:'' }}">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endwith %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div
+                class="p-4 bg-light bg-opacity-50 border-top glass-card rounded-0 d-flex justify-content-between align-items-center">
+                <p class="text-muted small mb-0"><i class="bi bi-info-circle me-1"></i> Marks are automatically
+                    validated (0-100 range).</p>
+                <button type="submit" class="btn btn-primary btn-pill px-5 shadow-lg">Save Academic Records</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
